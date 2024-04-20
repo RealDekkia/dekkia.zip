@@ -33,6 +33,12 @@ body {
     background-color: var(--accent-bg);
 }
 
+#topBarLinkBox {
+    display: contents;
+    text-decoration: unset;
+    color: inherit;
+}
+
 #topBarImage {
     height: 5vh;
     border-radius: 6vh;
