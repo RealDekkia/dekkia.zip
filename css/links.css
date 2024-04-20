@@ -10,6 +10,7 @@
     margin-bottom: 2vh;
     overflow-y: auto;
     height: calc(100% - 4vh);
+    overflow-x: hidden;
 }
 
 #links>a {
@@ -21,6 +22,8 @@
     color: initial;
     text-decoration: none;
     transition: margin 0.1s;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 #links>a>* {
