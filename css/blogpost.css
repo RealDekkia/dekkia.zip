@@ -1,0 +1,26 @@
+/*Unset some stuff from lib/unroll-ninja/thread/css/style.css thats not needed here*/
+
+body {
+    grid-template-rows: unset;
+    background-color: var(--accent-bg);
+}
+
+#topBarBox {
+    grid-template-columns: unset;
+}
+
+#topBarBox #topBarImage {
+    align-self: unset;
+    justify-self: unset;
+}
+
+#topBarBox #topBarText {
+    font-size: 2.6rem;
+}
+
+/*Unset done*/
+
+.mainBody>.title {
+    font-size: 2rem;
+    margin: 1rem;
+}

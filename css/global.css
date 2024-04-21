@@ -39,13 +39,13 @@ body {
     color: inherit;
 }
 
-#topBarImage {
+#topBarBox #topBarImage {
     height: 5vh;
     border-radius: 6vh;
     margin: .5vh;
 }
 
-#topBarText {
+#topBarBox #topBarText {
     display: inline-block;
     margin: 0;
     line-height: 6vh;
