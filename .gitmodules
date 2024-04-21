@@ -1,0 +1,3 @@
+[submodule "lib/unroll-ninja"]
+	path = lib/unroll-ninja
+	url = git@github.com:RealDekkia/unroll-ninja.git
