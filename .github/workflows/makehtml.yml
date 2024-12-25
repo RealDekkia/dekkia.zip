@@ -11,7 +11,7 @@ jobs:
           run: |
             cd _builder
             npm install
-            node ./_builder/index.js
+            node ./index.js
             cd ..
         #- name: Setup Pages
         #  uses: actions/configure-pages@v5
