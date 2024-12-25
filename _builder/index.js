@@ -63,4 +63,5 @@ posts.forEach(blogPost => {
 });
 
 //Create index in blog-dir
-fs.copyFileSync(path.join(__dirname, 'postTemplate.html'), path.join(__dirname, '../blog/post/index.html'))
+const postIndexDom = new JSDOM('<!--THIS FILE HAS BEEN AUTOMATICALLY GENERATED PLEASE DO NOT MODIFY-->\n' + fs.readFileSync(path.join(__dirname, 'postTemplate.html'), 'utf-8'));
+fs.writeFileSync(path.join(__dirname, '../blog/post/index.html'), postIndexDom.serialize(), { encoding: 'utf-8' });
