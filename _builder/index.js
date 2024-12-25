@@ -45,6 +45,8 @@ fs.writeFileSync(path.join(__dirname, '../blog/index.html'), mainIndexDom.serial
 
 //==== Build single pages ====
 
+console.log(fs.readdirSync(path.join(__dirname, '../blog/post/')));
+
 //Get rid of everything in th post folder
 fs.readdir(path.join(__dirname, '../blog/post/'), (err, files) => {
     files.forEach(file => {
@@ -63,5 +65,5 @@ posts.forEach(blogPost => {
 });
 
 //Create index in blog-dir
-const postIndexDom = new JSDOM('<!--THIS FILE HAS BEEN AUTOMATICALLY GENERATED PLEASE DO NOT MODIFY-->\n' + fs.readFileSync(path.join(__dirname, 'postTemplate.html'), 'utf-8'));
-fs.writeFileSync(path.join(__dirname, '../blog/post/index.html'), postIndexDom.serialize(), { encoding: 'utf-8' });
+//const postIndexDom = new JSDOM('<!--THIS FILE HAS BEEN AUTOMATICALLY GENERATED PLEASE DO NOT MODIFY-->\n' + fs.readFileSync(path.join(__dirname, 'postTemplate.html'), 'utf-8'));
+//fs.writeFileSync(path.join(__dirname, '../blog/post/index.html'), postIndexDom.serialize(), { encoding: 'utf-8' });
