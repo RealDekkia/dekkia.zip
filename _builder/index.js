@@ -47,6 +47,8 @@ fs.writeFileSync(path.join(__dirname, '../blog/index.html'), mainIndexDom.serial
 
 console.log(__dirname);
 console.log(fs.readdirSync(__dirname));
+console.log(fs.readdirSync(path.join(__dirname, '..')));
+console.log(fs.readdirSync(path.join(__dirname, '../blog/')));
 console.log(fs.readdirSync(path.join(__dirname, '../blog/post/')));
 
 //Get rid of everything in th post folder
