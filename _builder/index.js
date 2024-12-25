@@ -45,6 +45,8 @@ fs.writeFileSync(path.join(__dirname, '../blog/index.html'), mainIndexDom.serial
 
 //==== Build single pages ====
 
+console.log(__dirname);
+console.log(fs.readdirSync(__dirname));
 console.log(fs.readdirSync(path.join(__dirname, '../blog/post/')));
 
 //Get rid of everything in th post folder
