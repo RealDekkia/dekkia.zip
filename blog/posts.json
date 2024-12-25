@@ -1,5 +1,12 @@
 [
     {
+        "title": "NACCESSIBLE_BOOT_DEVICE",
+        "description": "Trying to get a Silicon Graphics 320 to boot Windows",
+        "startPostID": "113697179342358671",
+        "img": "SGI320.png",
+        "createdAt": "2024-12-22"
+    },
+    {
         "title": "THINK",
         "description": "Messing around with an IBM Thinkpad 755C.",
         "startPostID": "113532890867598747",
