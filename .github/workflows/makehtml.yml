@@ -7,10 +7,14 @@ jobs:
       steps:
         - name: Checkout
           uses: actions/checkout@v4
+        - name: goto directory
+          uses: cd _builder
         - name: install dependencies
           run: npm install
         - name: generate html
           run: node ./_builder/index.js
+        - name: goto directory
+          uses: cd ..
         #- name: Setup Pages
         #  uses: actions/configure-pages@v5
         #- name: Build with Jekyll
