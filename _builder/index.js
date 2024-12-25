@@ -45,18 +45,17 @@ fs.writeFileSync(path.join(__dirname, '../blog/index.html'), mainIndexDom.serial
 
 //==== Build single pages ====
 
-console.log(__dirname);
-console.log(fs.readdirSync(__dirname));
-console.log(fs.readdirSync(path.join(__dirname, '..')));
-console.log(fs.readdirSync(path.join(__dirname, '../blog/')));
-console.log(fs.readdirSync(path.join(__dirname, '../blog/post/')));
-
-//Get rid of everything in th post folder
-fs.readdir(path.join(__dirname, '../blog/post/'), (err, files) => {
-    files.forEach(file => {
-        fs.unlinkSync(path.join(__dirname, '../blog/post/', file));
+//Check if post-folder exists
+if (!fs.existsSync(path.join(__dirname, '../blog/post/'))) {
+    fs.mkdirSync(path.join(__dirname, '../blog/post/'));
+} else {
+    //Get rid of everything in th post folder
+    fs.readdir(path.join(__dirname, '../blog/post/'), (err, files) => {
+        files.forEach(file => {
+            fs.unlinkSync(path.join(__dirname, '../blog/post/', file));
+        });
     });
-});
+}
 
 posts.forEach(blogPost => {
     threadUnroll.initPageAsApi('https://dekkia.com', blogPost.startPostID, blogPost.title, function (out) {
@@ -69,5 +68,5 @@ posts.forEach(blogPost => {
 });
 
 //Create index in blog-dir
-//const postIndexDom = new JSDOM('<!--THIS FILE HAS BEEN AUTOMATICALLY GENERATED PLEASE DO NOT MODIFY-->\n' + fs.readFileSync(path.join(__dirname, 'postTemplate.html'), 'utf-8'));
-//fs.writeFileSync(path.join(__dirname, '../blog/post/index.html'), postIndexDom.serialize(), { encoding: 'utf-8' });
+const postIndexDom = new JSDOM('<!--THIS FILE HAS BEEN AUTOMATICALLY GENERATED PLEASE DO NOT MODIFY-->\n' + fs.readFileSync(path.join(__dirname, 'postTemplate.html'), 'utf-8'));
+fs.writeFileSync(path.join(__dirname, '../blog/post/index.html'), postIndexDom.serialize(), { encoding: 'utf-8' });
