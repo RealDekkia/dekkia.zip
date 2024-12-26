@@ -17,7 +17,7 @@
     text-decoration: unset;
     display: grid;
     grid-template-rows: 50% 50%;
-    grid-template-columns: 8vh auto;
+    grid-template-columns: 10vh auto;
     height: fit-content;
     background-color: var(--accent-bg);
     margin: 2vh;
@@ -32,7 +32,7 @@
 .linkImage {
     grid-row: 1 / 3;
     grid-column: 1;
-    height: 8vh;
+    height: 10vh;
 }
 
 .linkTitle {
