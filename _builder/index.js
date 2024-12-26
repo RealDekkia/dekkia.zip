@@ -32,8 +32,26 @@ posts.forEach(blogPost => {
         postDom.window.document.getElementById('mainPage').appendChild(dom);
         fs.writeFileSync(path.join(__dirname, '../blog/post/' + blogPost.startPostID + '.html'), postDom.serialize(), { encoding: 'utf-8' });
 
-        blogPost.oldestPost = arr[0].created_at;
-        blogPost.newestPost = arr[arr.length - 1].created_at;
+        try {
+            blogPost.oldestPost = arr[0].created_at;
+            if (arr[arr.length - 1]) {
+                blogPost.newestPost = arr[arr.length - 1].created_at;
+            } else {
+                //Sometimes the last array-entry is undefined.
+                blogPost.newestPost = arr[arr.length - 2].created_at;
+            }
+        } catch (error) {
+            console.warn(error);
+            console.warn(blogPost);
+            console.warn(arr.length);
+            for (let index = 0; index < arr.length; index++) {
+                if (arr[index]) {
+                    console.warn(index, arr[index].id);
+                } else {
+                    console.warn(index, "missing");
+                }
+            }
+        }
 
         postcnt++;
         if (postcnt >= posts.length) makeIndex();
@@ -49,8 +67,6 @@ fs.writeFileSync(path.join(__dirname, '../blog/post/index.html'), postIndexDom.s
 //==== Build main index ====
 
 function makeIndex() {
-
-    console.log(posts);
 
     const mainIndexDom = new JSDOM('<!--THIS FILE HAS BEEN AUTOMATICALLY GENERATED PLEASE DO NOT MODIFY-->\n' + fs.readFileSync(path.join(__dirname, 'indexTemplate.html'), 'utf-8'));
 
@@ -73,7 +89,7 @@ function makeIndex() {
         linkContainer.appendChild(linkTitle);
 
         var linkDescription = mainIndexDom.window.document.createElement('div');
-        linkDescription.innerHTML = blogPost.description + '<br>Posted: ' + new Date(blogPost.oldestPost).toLocaleDateString() + ', Updated: ' + new Date(blogPost.newestPost).toLocaleDateString();
+        linkDescription.innerHTML = blogPost.description + '<br>Posted: ' + new Date(blogPost.oldestPost).toLocaleDateString() + ', Last Updated: ' + new Date(blogPost.newestPost).toLocaleDateString();
         linkDescription.className = 'linkDescription';
         linkContainer.appendChild(linkDescription);
 
