@@ -63,7 +63,7 @@ posts.forEach(blogPost => {
         out.className = "mainBody";
         postDom.window.document.getElementById('mainPage').appendChild(out);
         fs.writeFileSync(path.join(__dirname, '../blog/post/' + blogPost.startPostID + '.html'), postDom.serialize(), { encoding: 'utf-8' });
-    });
+    }, false);
 
 });
 
