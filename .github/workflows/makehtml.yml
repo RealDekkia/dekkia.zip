@@ -1,6 +1,11 @@
 name: Make HTML
 on:
   workflow_dispatch:
+  push:
+    branches:
+    - main
+  schedule:
+  - cron:  '0 0 * * *'
 jobs:
   build:
       runs-on: ubuntu-latest
