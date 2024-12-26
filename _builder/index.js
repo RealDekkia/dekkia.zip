@@ -94,7 +94,7 @@ function makeIndex() {
         var newDate = new Date(blogPost.newestPost);
 
 
-        linkDescription.innerHTML = blogPost.description + '<br>Posted: ' + oldDate.getFullYear() + "-" + oldDate.getMonth() + "-" + oldDate.getDate() + ', Last Updated: ' + newDate.getFullYear() + "-" + newDate.getMonth() + "-" + newDate.getDate();
+        linkDescription.innerHTML = blogPost.description + '<br>Posted: ' + oldDate.getFullYear() + "-" + (oldDate.getMonth() + 1) + "-" + oldDate.getDate() + ', Last Updated: ' + newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate();
         linkDescription.className = 'linkDescription';
         linkContainer.appendChild(linkDescription);
 
