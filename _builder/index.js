@@ -89,7 +89,12 @@ function makeIndex() {
         linkContainer.appendChild(linkTitle);
 
         var linkDescription = mainIndexDom.window.document.createElement('div');
-        linkDescription.innerHTML = blogPost.description + '<br>Posted: ' + new Date(blogPost.oldestPost).toLocaleDateString() + ', Last Updated: ' + new Date(blogPost.newestPost).toLocaleDateString();
+
+        var oldDate = new Date(blogPost.oldestPost);
+        var newDate = new Date(blogPost.newestPost);
+
+
+        linkDescription.innerHTML = blogPost.description + '<br>Posted: ' + oldDate.getFullYear() + "-" + oldDate.getMonth() + "-" + oldDate.getDate() + ', Last Updated: ' + newDate.getFullYear() + "-" + newDate.getMonth() + "-" + newDate.getDate();
         linkDescription.className = 'linkDescription';
         linkContainer.appendChild(linkDescription);
 
