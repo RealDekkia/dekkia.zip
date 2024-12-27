@@ -55,7 +55,7 @@ posts.forEach(blogPost => {
 
         postcnt++;
         if (postcnt >= posts.length) makeIndex();
-    }, false);
+    }, false, blogPost.statusBlocklist, blogPost.brokenThreadContinue);
 
 });
 

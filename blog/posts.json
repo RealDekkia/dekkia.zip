@@ -18,7 +18,13 @@
         "description": "Sorting trough a bunch of electronic things I bought at an auction.",
         "startPostID": "113526363454768669",
         "img": "mavica.png",
-        "createdAt": "2024-11-22"
+        "createdAt": "2024-11-22",
+        "brokenThreadContinue": [
+            {
+                "append": "113532336169869086",
+                "to": "113532323478724543"
+            }
+        ]
     },
     {
         "title": "unroll.ninja",
@@ -39,7 +45,30 @@
         "description": "Building a Dock for the Switch Lite.",
         "startPostID": "111795227703579783",
         "img": "switchlitedock.png",
-        "createdAt": "2024-01-21"
+        "createdAt": "2024-01-21",
+        "statusBlocklist": [
+            "111829553579161492",
+            "111829555820511851",
+            "111829560602028866"
+        ],
+        "brokenThreadContinue": [
+            {
+                "append": "111828823272024628",
+                "to": "111828808571233234"
+            },
+            {
+                "append": "111828840979060603",
+                "to": "111828827718773926"
+            },
+            {
+                "append": "111828855774904867",
+                "to": "111828847923226668"
+            },
+            {
+                "append": "111829435456067333",
+                "to": "111829386951761274"
+            }
+        ]
     },
     {
         "title": "Aquiring a FRU04W1730 Cable",
