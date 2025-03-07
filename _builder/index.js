@@ -77,7 +77,9 @@ fs.writeFileSync(path.join(__dirname, '../blog/post/index.html'), postIndexDom.s
 //Start of RSS feed
 var rssDOM = {
     rss: [
-        { _attr: { version: '2.0' } },
+        {
+            _attr: { version: '2.0', 'xmlns:atom': 'http://www.w3.org/2005/Atom' },
+        },
         {
             channel: [
                 { title: 'Dekkia\'s Blog' },
@@ -87,7 +89,10 @@ var rssDOM = {
                 { pubDate: new Date().toUTCString() },
                 { lastBuildDate: '' }, //leave this at index 5 if you don't want to break further code
                 { generator: 'https://github.com/RealDekkia/dekkia.zip' },
-                { docs: 'https://www.rssboard.org/rss-specification' }
+                { docs: 'https://www.rssboard.org/rss-specification' },
+                { managingEditor: 'Fediverse: @dekkia@dekkia.com' },
+                { 'atom:link href="https://dekkia.zip/blog/rss.xml" rel="self" type="application/rss+xml"': {} }
+                //Items go here
             ]
         }
     ]
@@ -132,7 +137,7 @@ function makeIndex() {
         //RSS Stuff
         if (newDate > newestUpdateDate) newestUpdateDate = newDate;
 
-        rssDOM.rss.push({
+        rssDOM.rss[1].channel.push({
             item: [
                 { title: rssItems[blogPost.startPostID].title },
                 { link: rssItems[blogPost.startPostID].link },
@@ -152,7 +157,7 @@ function finalizeRSS() {
     //Write RSS file
 
     rssDOM.rss[1].channel[5].lastBuildDate = newestUpdateDate.toUTCString();
-    var rssTxt = xml(rssDOM).replaceAll('&lt;img ', '&lt;img width=500px ').replaceAll('&lt;video ', '&lt;video width=500px ');
+    var rssTxt = xml(rssDOM, { indent: '\t' }).replaceAll('&lt;img ', '&lt;img width=500px ').replaceAll('&lt;video ', '&lt;video width=500px ');
 
     fs.writeFileSync(path.join(__dirname, '../blog/rss.xml'), rssTxt);
 }
