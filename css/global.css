@@ -21,7 +21,7 @@ body {
 #mainPage {
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 6vh calc(100% - 6vh);
+    grid-template-rows: 6vh calc(100% - 10vh) 4vh;
     height: 100%;
     height: 100%;
 }
@@ -60,4 +60,31 @@ body {
 
 #topBarBox #topBarRssIcon {
     float: right;
+}
+
+footer {
+    grid-row: 3;
+    grid-column: 1;
+    height: 4rem;
+    background-color: var(--accent-bg);
+}
+
+footer>#footerIconContainer {
+    display: block;
+    width: calc(100% - 2rem);
+    margin: auto;
+    height: 100%;
+    text-align: right;
+}
+
+footer>#footerIconContainer>a {
+    height: 100%;
+    display: inline-block;
+    width: fit-content;
+}
+
+footer>#footerIconContainer>a>img {
+    height: 1.75rem;
+    margin-top: 0.3rem;
+    border-radius: unset;
 }
