@@ -3,6 +3,7 @@ const path = require('path');
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const threadUnroll = require('../lib/unroll-ninja/thread/js/main');
+var xml = require('xml');
 
 var posts = JSON.parse(fs.readFileSync(path.join(__dirname, '../blog/posts.json'), 'utf-8'));
 
@@ -24,6 +25,10 @@ if (!fs.existsSync(path.join(__dirname, '../blog/post/'))) {
         });
     });
 }
+//Delete rss-file
+try { fs.unlinkSync(path.join(__dirname, '../blog/rss.xml')); } catch (e) { console.warn(e); }
+var rssItems = {};
+
 var postcnt = 0;
 posts.forEach(blogPost => {
     threadUnroll.initPageAsApi('https://dekkia.com', blogPost.startPostID, blogPost.title, function (dom, arr) {
@@ -31,6 +36,12 @@ posts.forEach(blogPost => {
         dom.className = "mainBody";
         postDom.window.document.getElementById('mainPage').appendChild(dom);
         fs.writeFileSync(path.join(__dirname, '../blog/post/' + blogPost.startPostID + '.html'), postDom.serialize(), { encoding: 'utf-8' });
+
+        rssItems[blogPost.startPostID] = {
+            description: dom.innerHTML,
+            title: blogPost.title,
+            link: 'https://dekkia.zip/blog/post/' + blogPost.startPostID + '.html'
+        };
 
         try {
             blogPost.oldestPost = arr[0].created_at;
@@ -63,9 +74,27 @@ posts.forEach(blogPost => {
 const postIndexDom = new JSDOM('<!--THIS FILE HAS BEEN AUTOMATICALLY GENERATED PLEASE DO NOT MODIFY-->\n' + fs.readFileSync(path.join(__dirname, 'postTemplate.html'), 'utf-8'));
 fs.writeFileSync(path.join(__dirname, '../blog/post/index.html'), postIndexDom.serialize(), { encoding: 'utf-8' });
 
+//Start of RSS feed
+var rssDOM = {
+    rss: [
+        { _attr: { version: '2.0' } },
+        {
+            channel: [
+                { title: 'Dekkia\'s Blog' },
+                { link: 'https://dekkia.zip/blog/' },
+                { description: 'Auto-generated Blog based on my Posts on Mastodon.' },
+                { language: 'en' },
+                { pubDate: new Date().toUTCString() },
+                { lastBuildDate: '' }, //leave this at index 5 if you don't want to break further code
+                { generator: 'https://github.com/RealDekkia/dekkia.zip' },
+                { docs: 'https://www.rssboard.org/rss-specification' }
+            ]
+        }
+    ]
+};
 
-//==== Build main index ====
-
+//==== Build main index and rss items ====
+var newestUpdateDate = new Date(0);
 function makeIndex() {
 
     const mainIndexDom = new JSDOM('<!--THIS FILE HAS BEEN AUTOMATICALLY GENERATED PLEASE DO NOT MODIFY-->\n' + fs.readFileSync(path.join(__dirname, 'indexTemplate.html'), 'utf-8'));
@@ -100,8 +129,30 @@ function makeIndex() {
 
         LinkBox.appendChild(linkContainer);
 
+        //RSS Stuff
+        if (newDate > newestUpdateDate) newestUpdateDate = newDate;
+
+        rssDOM.rss.push({
+            item: [
+                { title: rssItems[blogPost.startPostID].title },
+                { link: rssItems[blogPost.startPostID].link },
+                { description: rssItems[blogPost.startPostID].description },
+                { guid: blogPost.startPostID },
+                { pubDate: newDate.toUTCString() }
+            ]
+        });
     });
 
     fs.writeFileSync(path.join(__dirname, '../blog/index.html'), mainIndexDom.serialize(), { encoding: 'utf-8' });
+
+    finalizeRSS();
 }
 
+function finalizeRSS() {
+    //Write RSS file
+
+    rssDOM.rss[1].channel[5].lastBuildDate = newestUpdateDate.toUTCString();
+    var rssTxt = xml(rssDOM).replaceAll('&lt;img ', '&lt;img width=500px ').replaceAll('&lt;video ', '&lt;video width=500px ');
+
+    fs.writeFileSync(path.join(__dirname, '../blog/rss.xml'), rssTxt);
+}

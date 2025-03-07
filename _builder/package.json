@@ -18,6 +18,7 @@
   "homepage": "https://github.com/RealDekkia/dekkia.zip#readme",
   "dependencies": {
     "jsdom": "^25.0.1",
+    "xml": "^1.0.1",
     "xmlhttprequest": "^1.8.0"
   }
 }
