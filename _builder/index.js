@@ -90,7 +90,7 @@ var rssDOM = {
                 { lastBuildDate: '' }, //leave this at index 5 if you don't want to break further code
                 { generator: 'https://github.com/RealDekkia/dekkia.zip' },
                 { docs: 'https://www.rssboard.org/rss-specification' },
-                { managingEditor: 'Fediverse: @dekkia@dekkia.com' },
+                { managingEditor: 'dekkia@dekkia.de (Dekkia)' },
                 { 'atom:link href="https://dekkia.zip/blog/rss.xml" rel="self" type="application/rss+xml"': {} }
                 //Items go here
             ]
@@ -142,7 +142,7 @@ function makeIndex() {
                 { title: rssItems[blogPost.startPostID].title },
                 { link: rssItems[blogPost.startPostID].link },
                 { description: rssItems[blogPost.startPostID].description },
-                { guid: blogPost.startPostID },
+                { guid: rssItems[blogPost.startPostID].link },
                 { pubDate: newDate.toUTCString() }
             ]
         });
