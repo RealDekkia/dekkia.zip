@@ -39,6 +39,7 @@
     margin-left: 1rem;
     font-size: 1.5rem;
     font-weight: bold;
+    overflow: hidden;
 }
 
 .linkContainer:hover>.linkTitle {

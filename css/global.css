@@ -51,6 +51,7 @@ body {
     line-height: 6vh;
     height: 100%;
     vertical-align: top;
+    font-size: 2.1rem;
 }
 
 #topBarBox #topBarRssIcon img {
