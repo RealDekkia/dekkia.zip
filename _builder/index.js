@@ -5,7 +5,15 @@ const { JSDOM } = jsdom;
 const threadUnroll = require('../lib/unroll-ninja/thread/js/main');
 var xml = require('xml');
 
-var posts = JSON.parse(fs.readFileSync(path.join(__dirname, '../blog/posts.json'), 'utf-8'));
+const args = process.argv;
+
+if (!args[2]) {
+    console.error("no post-file given");
+    process.exit(1);
+}
+
+//no need for additional error handling. Crashing is fine.
+var posts = JSON.parse(fs.readFileSync(path.join(__dirname, args[2]), 'utf-8'));
 
 //sort newest to oldest by post date
 posts.sort(function (a, b) {

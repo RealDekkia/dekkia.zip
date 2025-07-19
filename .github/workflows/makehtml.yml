@@ -18,7 +18,7 @@ jobs:
           run: |
             cd _builder
             npm install
-            node ./index.js
+            node ./index.js ..\blog\posts.json
             cd ..
         - name: Setup Pages
           uses: actions/configure-pages@v5
