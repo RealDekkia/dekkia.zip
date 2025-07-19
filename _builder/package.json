@@ -17,7 +17,10 @@
   },
   "homepage": "https://github.com/RealDekkia/dekkia.zip#readme",
   "dependencies": {
+    "dompurify": "^3.2.6",
     "jsdom": "^25.0.1",
+    "marked": "^16.1.1",
+    "uuid": "^11.1.0",
     "xml": "^1.0.1",
     "xmlhttprequest": "^1.8.0"
   }

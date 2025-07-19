@@ -4,6 +4,7 @@ const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 const threadUnroll = require('../lib/unroll-ninja/thread/js/main');
 var xml = require('xml');
+const createDOMPurify = require('dompurify');
 
 const args = process.argv;
 
@@ -29,7 +30,7 @@ if (!fs.existsSync(path.join(__dirname, '../blog/post/'))) {
     //Get rid of everything in th post folder
     fs.readdir(path.join(__dirname, '../blog/post/'), (err, files) => {
         files.forEach(file => {
-            fs.unlinkSync(path.join(__dirname, '../blog/post/', file));
+            fs.rmSync(path.join(__dirname, '../blog/post/', file), { recursive: true, force: true });
         });
     });
 }
@@ -39,43 +40,88 @@ var rssItems = {};
 
 var postcnt = 0;
 posts.forEach(blogPost => {
-    threadUnroll.initPageAsApi('https://dekkia.com', blogPost.startPostID, blogPost.title, function (dom, arr) {
-        const postDom = new JSDOM('<!--THIS FILE HAS BEEN AUTOMATICALLY GENERATED PLEASE DO NOT MODIFY-->\n' + fs.readFileSync(path.join(__dirname, 'postTemplate.html'), 'utf-8'));
-        dom.className = "mainBody";
-        postDom.window.document.getElementById('mainPage').appendChild(dom);
-        fs.writeFileSync(path.join(__dirname, '../blog/post/' + blogPost.startPostID + '.html'), postDom.serialize(), { encoding: 'utf-8' });
 
-        rssItems[blogPost.startPostID] = {
-            description: dom.innerHTML,
-            title: blogPost.title,
-            link: 'https://dekkia.zip/blog/post/' + blogPost.startPostID + '.html'
-        };
+    //handle differnt post types
+    switch (blogPost.type) {
+        case "markdown":
 
-        try {
-            blogPost.oldestPost = arr[0].created_at;
-            if (arr[arr.length - 1]) {
-                blogPost.newestPost = arr[arr.length - 1].created_at;
-            } else {
-                //Sometimes the last array-entry is undefined.
-                blogPost.newestPost = arr[arr.length - 2].created_at;
-            }
-        } catch (error) {
-            console.warn(error);
-            console.warn(blogPost);
-            console.warn(arr.length);
-            for (let index = 0; index < arr.length; index++) {
-                if (arr[index]) {
-                    console.warn(index, arr[index].id);
-                } else {
-                    console.warn(index, "missing");
+            (async () => {
+                const { marked } = await import('marked');
+
+                //Create escaped html from markdown
+                const unclean = marked.parse(fs.readFileSync(path.join('../_markdown', blogPost.postID, blogPost.postID + '.md'), 'utf-8'));
+                const domPurifyWindow = new JSDOM('').window;
+                const DOMPurify = createDOMPurify(domPurifyWindow);
+                const clean = DOMPurify.sanitize(unclean);
+
+                //Create the html-page
+                const postDom = new JSDOM('<!--THIS FILE HAS BEEN AUTOMATICALLY GENERATED PLEASE DO NOT MODIFY-->\n' + fs.readFileSync(path.join(__dirname, 'postTemplate.html'), 'utf-8'));
+                const mainDom = new JSDOM('').window.document.createElement('div');
+                mainDom.className = "mainBody";
+                mainDom.innerHTML = clean;
+                postDom.window.document.getElementById('mainPage').appendChild(mainDom);
+
+                //write html-page
+                fs.writeFileSync(path.join(__dirname, '../blog/post/' + blogPost.postID + '.html'), postDom.serialize(), { encoding: 'utf-8' });
+
+                //TODO: make img-urls absolute (also better for rss)
+
+                //copy other sources to post directory
+                fs.cpSync(path.join('../_markdown', blogPost.postID, blogPost.postID + '_img'), path.join(__dirname, '../blog/post/' + blogPost.postID + '_img'), { recursive: true });
+
+                //create rss-feed
+                blogPost.startPostID = blogPost.postID; //for compatibility with mastodon data
+                rssItems[blogPost.postID] = {
+                    description: clean,
+                    title: blogPost.title,
+                    link: 'https://dekkia.zip/blog/post/' + blogPost.postID + '.html'
+                };
+
+                postcnt++;
+                if (postcnt >= posts.length) makeIndex();
+            })();
+            break;
+
+        case "mastodon":
+        default:
+            threadUnroll.initPageAsApi('https://dekkia.com', blogPost.startPostID, blogPost.title, function (dom, arr) {
+                const postDom = new JSDOM('<!--THIS FILE HAS BEEN AUTOMATICALLY GENERATED PLEASE DO NOT MODIFY-->\n' + fs.readFileSync(path.join(__dirname, 'postTemplate.html'), 'utf-8'));
+                dom.className = "mainBody";
+                postDom.window.document.getElementById('mainPage').appendChild(dom);
+                fs.writeFileSync(path.join(__dirname, '../blog/post/' + blogPost.startPostID + '.html'), postDom.serialize(), { encoding: 'utf-8' });
+
+                rssItems[blogPost.startPostID] = {
+                    description: dom.innerHTML,
+                    title: blogPost.title,
+                    link: 'https://dekkia.zip/blog/post/' + blogPost.startPostID + '.html'
+                };
+
+                try {
+                    blogPost.oldestPost = arr[0].created_at;
+                    if (arr[arr.length - 1]) {
+                        blogPost.newestPost = arr[arr.length - 1].created_at;
+                    } else {
+                        //Sometimes the last array-entry is undefined.
+                        blogPost.newestPost = arr[arr.length - 2].created_at;
+                    }
+                } catch (error) {
+                    console.warn(error);
+                    console.warn(blogPost);
+                    console.warn(arr.length);
+                    for (let index = 0; index < arr.length; index++) {
+                        if (arr[index]) {
+                            console.warn(index, arr[index].id);
+                        } else {
+                            console.warn(index, "missing");
+                        }
+                    }
                 }
-            }
-        }
 
-        postcnt++;
-        if (postcnt >= posts.length) makeIndex();
-    }, false, blogPost.statusBlocklist, blogPost.brokenThreadContinue);
-
+                postcnt++;
+                if (postcnt >= posts.length) makeIndex();
+            }, false, blogPost.statusBlocklist, blogPost.brokenThreadContinue);
+            break;
+    }
 });
 
 //Create index in blog-dir
