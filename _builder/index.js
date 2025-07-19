@@ -12,8 +12,8 @@ if (!args[2]) {
     process.exit(1);
 }
 
-//no need for additional error handling. Crashing is fine.
-var posts = JSON.parse(fs.readFileSync(path.join(__dirname, args[2]), 'utf-8'));
+console.log("Loading from " + path.join(__dirname, args[2]));
+var posts = JSON.parse(fs.readFileSync(path.join(__dirname, args[2]), 'utf-8')); //no need for additional error handling. Crashing is fine.
 
 //sort newest to oldest by post date
 posts.sort(function (a, b) {
