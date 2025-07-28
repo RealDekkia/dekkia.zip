@@ -88,4 +88,6 @@ footer>#footerIconContainer>a>img {
     height: 1.75rem;
     margin-top: 0.3rem;
     border-radius: unset;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
 }
