@@ -44,7 +44,6 @@ posts.forEach(blogPost => {
     //handle differnt post types
     switch (blogPost.type) {
         case "markdown":
-
             (async () => {
                 const { marked } = await import('marked');
 
@@ -81,7 +80,6 @@ posts.forEach(blogPost => {
                 if (postcnt >= posts.length) makeIndex();
             })();
             break;
-
         case "mastodon":
         default:
             threadUnroll.initPageAsApi('https://dekkia.com', blogPost.startPostID, blogPost.title, function (dom, arr) {
@@ -177,12 +175,18 @@ function makeIndex() {
         linkContainer.appendChild(linkTitle);
 
         var linkDescription = mainIndexDom.window.document.createElement('div');
-
-        var oldDate = new Date(blogPost.oldestPost);
         var newDate = new Date(blogPost.newestPost);
 
+        console.log(blogPost.type);
+        if (blogPost.type == "markdown") {
+            newDate = new Date(blogPost.createdAt);
+            linkDescription.innerHTML = blogPost.description + '<br>Last Updated: ' + newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate();
+        } else {
+            var oldDate = new Date(blogPost.oldestPost);
 
-        linkDescription.innerHTML = blogPost.description + '<br>Posted: ' + oldDate.getFullYear() + "-" + (oldDate.getMonth() + 1) + "-" + oldDate.getDate() + ', Last Updated: ' + newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate();
+            linkDescription.innerHTML = blogPost.description + '<br>Posted: ' + oldDate.getFullYear() + "-" + (oldDate.getMonth() + 1) + "-" + oldDate.getDate() + ', Last Updated: ' + newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate();
+        }
+
         linkDescription.className = 'linkDescription';
         linkContainer.appendChild(linkDescription);
 
