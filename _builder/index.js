@@ -177,7 +177,6 @@ function makeIndex() {
         var linkDescription = mainIndexDom.window.document.createElement('div');
         var newDate = new Date(blogPost.newestPost);
 
-        console.log(blogPost.type);
         if (blogPost.type == "markdown") {
             newDate = new Date(blogPost.createdAt);
             linkDescription.innerHTML = blogPost.description + '<br>Last Updated: ' + newDate.getFullYear() + "-" + (newDate.getMonth() + 1) + "-" + newDate.getDate();
